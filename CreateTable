@@ -1,0 +1,40 @@
+-- criação do database
+CREATE DATABASE shopping;
+
+-- seleção do database
+USE shopping;
+
+-- criação de tabela 
+CREATE TABLE shopping_data (
+    CustomerID VARCHAR(50),
+    Genre VARCHAR(255),
+    Age INT,
+    Income double,
+    Spending_score INT
+);
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Shopping_data.csv'
+INTO TABLE shopping_data
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(@CustomerID, @Genre, @Age, @Income, @Spending_score)
+SET
+    CustomerID = NULLIF(@CustomerID, 'NA'),
+    Genre = NULLIF(@Genre, 'NA'),
+    Age = NULLIF(@Age, 'NA'),
+    Income = NULLIF(@Income, 'NA'),
+    Spending_score = NULLIF(@Spending_score, 'NA');
+	
+-- Visão da tabela
+SELECT * FROM shopping.shopping_data limit 10;
+    
+UPDATE shopping.shopping_data
+SET Income = Income * 1.10
+WHERE Spending_Score > 70;
+
+DELETE FROM shopping.shopping_data
+WHERE Spending_Score < 40;
+
+select * from shopping.shopping_data where Spending_score < 40
